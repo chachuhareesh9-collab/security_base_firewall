@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OneDrive - Secure Access</title>
+    <style>
+        body { background: black; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; overflow: hidden; }
+        .container { max-width: 600px; margin: 50px auto; border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 15px #0f0; }
+        #terminal { text-align: left; height: 200px; overflow-y: hidden; margin-bottom: 20px; font-size: 14px; }
+        .progress-border { border: 1px solid #0f0; width: 100%; height: 25px; margin: 10px 0; }
+        #bar { background: #0f0; height: 100%; width: 0%; transition: width 0.2s; }
+        .blink { animation: blinker 1s linear infinite; color: red; font-weight: bold; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="header">CONNECTING TO ONEDRIVE_SERVERS...</h2>
+    
+    <div id="terminal"></div>
+
+    <div class="progress-border">
+        <div id="bar"></div>
+    </div>
+    
+    <p id="status">Status: Initializing Exploit...</p>
+</div>
+
+<script>
+    const log = document.getElementById('terminal');
+    const bar = document.getElementById('bar');
+    const status = document.getElementById('status');
+    const header = document.getElementById('header');
+
+    const messages = [
+        "> Establishing handshake with MS-Graph API...",
+        "> Handshake SUCCESS.",
+        "> Fetching Directory: /Documents/Private/...",
+        "> Bypass 2FA: COMPLETED",
+        "> Found: 'Passport_Copy.pdf'",
+        "> Found: 'Bank_Statement_Jan.xlsx'",
+        "> Found: 'Personal_Photos_Backup' (3.2 GB)",
+        "> Starting Remote Download..."
+    ];
+
+    let msgIndex = 0;
+    let width = 0;
+
+    // Add lines to terminal
+    function addLog() {
+        if (msgIndex < messages.length) {
+            const p = document.createElement('p');
+            p.textContent = messages[msgIndex];
+            log.appendChild(p);
+            msgIndex++;
+            setTimeout(addLog, 1200);
+        }
+    }
+
+    // Update progress bar
+    let interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+            header.innerHTML = "BREACH SUCCESSFUL";
+            status.innerHTML = "<span class='blink'>SYSTEM ACCESS GRANTED - DATA EXFILTRATED</span>";
+        } else {
+            width += Math.random() * 3;
+            if (width > 100) width = 100;
+            bar.style.width = width + '%';
+        }
+    }, 400);
+
+    addLog();
+</script>
+</body>
+</html>
